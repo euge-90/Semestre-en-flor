@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "lastSynced": "2026-09-11T00:00:00.000Z",
+    "source": "seed"
+  },
+  "courses": [
+    { "id": "so", "name": "Sistemas Operativos", "day": "Martes", "time": "18:30 – 22:30", "mode": "Online", "professor": "Luiyi Sánchez", "color": "so" },
+    { "id": "api", "name": "Aplicaciones Interactivas", "day": "Jueves", "time": "18:30 – 22:30", "mode": "Online", "professor": "Baltazar Sánchez", "color": "api" },
+    { "id": "algo", "name": "Algoritmos y Estructuras I", "day": "Viernes", "time": "13:30 – 17:30", "mode": "Aula 548 · Monserrat", "professor": "Julia Monasterio", "color": "algo" },
+    { "id": "redes", "name": "Redes de Datos", "day": "Viernes", "time": "18:45 – 22:15", "mode": "Aula 663 · Monserrat", "professor": "Leonardo Giordano", "color": "redes" }
+  ],
+  "evaluations": [
+    { "id": "eval-1", "date": "2026-09-21", "label": "Entrega Actividad 2 (IA) — SO", "course": "so" },
+    { "id": "eval-2", "date": "2026-10-17", "label": "Parcial — Sistemas Operativos", "course": "so" },
+    { "id": "eval-3", "date": "2026-10-22", "label": "Parcial oral — Aplicaciones Interactivas", "course": "api" },
+    { "id": "eval-4", "date": "2026-11-02", "label": "Entrega Actividad 3 (TP) — SO", "course": "so" },
+    { "id": "eval-5", "date": "2026-12-01", "label": "Recuperatorio — Sistemas Operativos", "course": "so" },
+    { "id": "eval-6", "date": "2026-12-03", "label": "Recuperatorio — Aplicaciones Interactivas", "course": "api" },
+    { "id": "eval-7", "date": "2026-12-11", "label": "Final — Redes de Datos y Algoritmos", "course": "redes" },
+    { "id": "eval-8", "date": "2026-12-17", "label": "Final — Aplicaciones Interactivas", "course": "api" },
+    { "id": "eval-9", "date": "2026-12-22", "label": "Final — Sistemas Operativos", "course": "so" }
+  ],
+  "studyTasks": [
+    { "id": "so-1", "course": "so", "text": "Repasar Gestión de Procesos (U2)" },
+    { "id": "so-2", "course": "so", "text": "Entrega Actividad 2 – IA (21/9)" },
+    { "id": "so-3", "course": "so", "text": "Repasar U1–U5 para el parcial (17/10)" },
+    { "id": "api-1", "course": "api", "text": "Login de usuario con JWT" },
+    { "id": "api-2", "course": "api", "text": "Backend completo — repaso pre-parcial" },
+    { "id": "api-3", "course": "api", "text": "Preparar evaluación oral (22/10)" },
+    { "id": "algo-1", "course": "algo", "text": "Recursión: casos base y backtracking" },
+    { "id": "algo-2", "course": "algo", "text": "TPO — testing con Bruno D. y Coni" },
+    { "id": "algo-3", "course": "algo", "text": "Árboles balanceados — intro AVL" },
+    { "id": "redes-1", "course": "redes", "text": "Enrutamiento y protocolos de ruteo" },
+    { "id": "redes-2", "course": "redes", "text": "Seguridad de redes" },
+    { "id": "redes-3", "course": "redes", "text": "Repaso OSI / TCP-IP / DNS / HTTP" }
+  ]
+}

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semestre en Flor</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#fff1ef; --bg-2:#f1ecff; --surface:#fffdfb; --surface-note:#fff7ec;
+    --ink:#4b3a46; --ink-soft:#8c7a8a; --ink-faint:#b7a8b5;
+    --accent:#e38aa6; --accent-2:#a98fe0; --accent-gold:#d9a94e; --line:#ecd9e0;
+    --so:#dba537; --api:#e38aa6; --algo:#6f9bce; --redes:#6fa584; --personal:#9a8ac7;
+    --shadow:0 14px 34px -16px rgba(120,70,100,.32); --shadow-sm:0 6px 16px -8px rgba(120,70,100,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg-1:#241a22; --bg-2:#1c1928; --surface:#2d222c; --surface-note:#34262f;
+      --ink:#f3e6ee; --ink-soft:#c9b4c3; --ink-faint:#8c7686;
+      --accent:#f0a9c0; --accent-2:#c5aef2; --accent-gold:#e8c077; --line:#4a3742;
+      --so:#e8c077; --api:#f0a9c0; --algo:#9bc0ec; --redes:#a3d0b4; --personal:#c3b3ec;
+      --shadow:0 14px 34px -16px rgba(0,0,0,.55); --shadow-sm:0 6px 16px -8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg-1:#241a22; --bg-2:#1c1928; --surface:#2d222c; --surface-note:#34262f;
+    --ink:#f3e6ee; --ink-soft:#c9b4c3; --ink-faint:#8c7686;
+    --accent:#f0a9c0; --accent-2:#c5aef2; --accent-gold:#e8c077; --line:#4a3742;
+    --so:#e8c077; --api:#f0a9c0; --algo:#9bc0ec; --redes:#a3d0b4; --personal:#c3b3ec;
+    --shadow:0 14px 34px -16px rgba(0,0,0,.55); --shadow-sm:0 6px 16px -8px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:
+      radial-gradient(60% 50% at 15% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent),
+      radial-gradient(55% 45% at 100% 15%, color-mix(in srgb, var(--accent-2) 18%, transparent), transparent),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    background-attachment:fixed; color:var(--ink); font-family:'Quicksand',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif; text-wrap:balance; margin:0}
+  .page{max-width:640px; margin:0 auto; padding-inline:20px; padding-block:36px 60px; position:relative}
+  .floaties{position:absolute; inset:0; top:0; height:520px; overflow:hidden; pointer-events:none; z-index:0}
+  .floaty{position:absolute; font-size:1.4rem; color:var(--accent-gold); opacity:.55; animation:drift 13s ease-in-out infinite}
+  .floaty.star{color:var(--accent-2)} .floaty.heart{color:var(--accent)}
+  .f1{left:6%; top:6%} .f2{left:82%; top:2%; font-size:1.1rem; animation-delay:2s}
+  .f3{left:88%; top:22%; animation-delay:4.5s} .f4{left:4%; top:30%; font-size:1rem; animation-delay:1.2s}
+  .f5{left:48%; top:1%; font-size:.9rem; animation-delay:6s}
+  @keyframes drift{0%,100%{transform:translateY(0) rotate(0deg); opacity:.45} 50%{transform:translateY(-16px) rotate(12deg); opacity:.8}}
+  @media (prefers-reduced-motion: reduce){ .floaty{animation:none} }
+
+  .hero{position:relative; z-index:1; padding-top:4px}
+  .eyebrow{font-family:'Quicksand'; font-weight:700; font-size:.72rem; letter-spacing:.11em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .sync-pill{font-size:.65rem; letter-spacing:.03em; text-transform:none; color:var(--ink-faint); background:var(--surface); border:1px solid var(--line); padding:3px 9px; border-radius:99px; font-weight:600}
+  h1{font-size:clamp(2rem,7vw,2.6rem); font-weight:600; font-style:italic; color:var(--ink)}
+  h1 .name{color:var(--accent); font-style:normal}
+  .countdown-card{margin-top:22px; background:var(--surface); border-radius:22px; padding:20px 22px; box-shadow:var(--shadow); display:flex; align-items:center; gap:16px; border:1px solid var(--line)}
+  .countdown-num{font-family:'Fraunces'; font-weight:700; font-size:2.6rem; color:var(--accent); line-height:1; font-variant-numeric:tabular-nums; min-width:64px}
+  .countdown-text{display:flex; flex-direction:column; gap:2px}
+  .countdown-label{font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); font-weight:600}
+  .countdown-event{font-weight:700; font-size:1.02rem; color:var(--ink)}
+  .countdown-sub{font-size:.85rem; color:var(--ink-soft); margin-top:2px}
+
+  .section{margin-top:46px; position:relative; z-index:1}
+  .section-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+  .section h2{font-size:1.5rem; font-weight:600; font-style:italic}
+
+  .notes-row{display:grid; grid-template-columns:1fr; gap:22px}
+  @media (min-width:560px){ .notes-row{grid-template-columns:1fr 1fr} }
+  .sticky-note{position:relative; background:var(--surface-note); border-radius:4px 4px 14px 14px; padding:20px 18px 18px; box-shadow:var(--shadow-sm); transition:transform .25s ease, box-shadow .25s ease; border-bottom:5px solid var(--course-color)}
+  .sticky-note:hover{transform:rotate(0deg) translateY(-3px); box-shadow:var(--shadow)}
+  .sticky-note:nth-child(4n+1){transform:rotate(-2.5deg)} .sticky-note:nth-child(4n+2){transform:rotate(2deg)}
+  .sticky-note:nth-child(4n+3){transform:rotate(-1.5deg)} .sticky-note:nth-child(4n+4){transform:rotate(2.5deg)}
+  .washi{position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg); width:64px; height:20px; background:color-mix(in srgb, var(--course-color) 55%, white 45%); opacity:.85; border-radius:2px}
+  .note-day{font-size:.72rem; text-transform:uppercase; letter-spacing:.09em; font-weight:700; color:var(--course-color); margin-bottom:6px}
+  .note-title{font-family:'Fraunces'; font-weight:600; font-size:1.12rem; margin-bottom:8px; line-height:1.25}
+  .note-meta{font-size:.85rem; color:var(--ink-soft); line-height:1.6}
+  .note-meta b{color:var(--ink); font-weight:600}
+
+  .bloom-wrap{display:flex; align-items:center; gap:8px}
+  .bloom-pct{font-size:.85rem; color:var(--ink-soft); font-weight:600; font-variant-numeric:tabular-nums}
+  .course-group{margin-bottom:22px} .course-group:last-child{margin-bottom:0}
+  .course-group h3{font-family:'Quicksand'; font-weight:700; font-size:.82rem; text-transform:uppercase; letter-spacing:.06em; color:var(--group-color); margin-bottom:10px; display:flex; align-items:center; gap:8px}
+  .course-group h3::before{content:''; width:9px; height:9px; border-radius:50%; background:var(--group-color); display:inline-block}
+  .check-item{display:flex; align-items:flex-start; gap:12px; padding:11px 4px; cursor:pointer; border-bottom:1px solid var(--line)}
+  .course-group .check-item:last-child{border-bottom:none}
+  .check-item input{position:absolute; opacity:0; width:1px; height:1px}
+  .mark{flex:0 0 auto; width:24px; height:24px; border-radius:50%; border:2px solid var(--group-color); display:flex; align-items:center; justify-content:center; font-size:.8rem; color:transparent; transition:background .2s ease, color .2s ease, transform .2s ease; margin-top:1px}
+  .check-item input:checked + .mark{background:var(--group-color); color:var(--surface); transform:scale(1.06)}
+  .check-item input:checked + .mark::after{content:'✓'}
+  .check-item input:focus-visible + .mark{outline:2px solid var(--accent-2); outline-offset:2px}
+  .txt{font-size:.97rem; line-height:1.45; color:var(--ink)}
+  .check-item input:checked ~ .txt{color:var(--ink-faint); text-decoration:line-through; text-decoration-color:var(--ink-faint)}
+  .empty-note{color:var(--ink-faint); font-size:.9rem; font-style:italic}
+
+  .timeline{list-style:none; margin:0; padding:0; position:relative}
+  .timeline::before{content:''; position:absolute; left:7px; top:6px; bottom:6px; width:2px; background:var(--line)}
+  .timeline li{position:relative; padding:0 0 22px 30px} .timeline li:last-child{padding-bottom:0}
+  .tl-dot{position:absolute; left:0; top:3px; width:16px; height:16px; border-radius:50%; background:var(--surface); border:3px solid var(--tl-color, var(--accent))}
+  .tl-row{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap}
+  .tl-label{font-weight:700; font-size:.98rem} .tl-date{font-size:.8rem; color:var(--ink-faint); font-weight:600}
+  .tl-days{font-size:.76rem; font-weight:700; color:var(--tl-color, var(--accent)); background:color-mix(in srgb, var(--tl-color, var(--accent)) 14%, var(--surface)); padding:3px 9px; border-radius:99px; white-space:nowrap}
+
+  .cal-embed{border-radius:18px; overflow:hidden; box-shadow:var(--shadow); border:1px solid var(--line)}
+  .cal-embed iframe{display:block; width:100%; height:420px; border:0; filter:saturate(.9)}
+  .cal-note{font-size:.78rem; color:var(--ink-faint); margin-top:10px; line-height:1.5}
+
+  .footer{margin-top:56px; text-align:center; color:var(--ink-faint); font-size:.85rem; position:relative; z-index:1}
+  .footer .sparkle{color:var(--accent-2)}
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease}
+  .reveal.in{opacity:1; transform:none}
+  @media (prefers-reduced-motion: reduce){ .reveal{opacity:1; transform:none; transition:none} }
+  @keyframes pop{0%{transform:scale(.4); opacity:1} 100%{transform:scale(1.6) translateY(-22px); opacity:0}}
+  .burst-particle{position:fixed; pointer-events:none; font-size:.95rem; color:var(--accent); animation:pop .7s ease-out forwards; z-index:50}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="floaties" aria-hidden="true">
+    <span class="floaty star f1">✦</span><span class="floaty heart f2">♡</span><span class="floaty star f3">✧</span>
+    <span class="floaty heart f4">♡</span><span class="floaty star f5">✦</span>
+  </div>
+
+  <header class="hero">
+    <p class="eyebrow">2° cuatrimestre · UADE · 2026 <span class="sync-pill" id="syncPill">sincronizando…</span></p>
+    <h1>Hola, <span class="name">Euge</span> 🌸</h1>
+    <div class="countdown-card">
+      <div class="countdown-num" id="cdNum">–</div>
+      <div class="countdown-text">
+        <span class="countdown-label" id="cdLabel">Cargando…</span>
+        <span class="countdown-event" id="cdEvent"></span>
+        <span class="countdown-sub" id="cdSub"></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="section reveal">
+    <div class="section-head"><h2>Mi semana</h2></div>
+    <div class="notes-row" id="notesRow"></div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section-head">
+      <h2>Plan de estudio</h2>
+      <div class="bloom-wrap">
+        <svg width="38" height="38" viewBox="0 0 100 100" id="bloomSvg" aria-hidden="true">
+          <g id="petals" fill="var(--line)">
+            <ellipse cx="50" cy="26" rx="11" ry="20" data-i="0"/>
+            <ellipse cx="50" cy="26" rx="11" ry="20" transform="rotate(60 50 50)" data-i="1"/>
+            <ellipse cx="50" cy="26" rx="11" ry="20" transform="rotate(120 50 50)" data-i="2"/>
+            <ellipse cx="50" cy="26" rx="11" ry="20" transform="rotate(180 50 50)" data-i="3"/>
+            <ellipse cx="50" cy="26" rx="11" ry="20" transform="rotate(240 50 50)" data-i="4"/>
+            <ellipse cx="50" cy="26" rx="11" ry="20" transform="rotate(300 50 50)" data-i="5"/>
+          </g>
+          <circle cx="50" cy="50" r="10" fill="var(--accent-gold)"/>
+        </svg>
+        <span class="bloom-pct" id="bloomPct">0%</span>
+      </div>
+    </div>
+    <div id="checklist"></div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section-head"><h2>Fechas clave</h2></div>
+    <ul class="timeline" id="timeline"></ul>
+  </section>
+
+  <section class="section reveal">
+    <div class="section-head"><h2>Google Calendar</h2></div>
+    <div class="cal-embed">
+      <iframe src="https://calendar.google.com/calendar/embed?src=ojedaeugenia08%40gmail.com&ctz=America%2FArgentina%2FBuenos_Aires&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0" loading="lazy"></iframe>
+    </div>
+    <p class="cal-note">Si no ves tus eventos acá: entrá a Google Calendar → Configuración de tu calendario → "Permisos de acceso" y activá "Disponible para el público" (podés elegir mostrar solo ocupado/libre si preferís privacidad). Si estás logueada con tu cuenta en este navegador, puede que ya lo veas sin cambiar nada.</p>
+  </section>
+
+  <footer class="footer">hecho con cariño para tu cursada <span class="sparkle">✦</span> vas bárbaro</footer>
+</div>
+
+<script>
+(function(){
+  var DATA = null;
+
+  function startOfDay(d){ var x=new Date(d); x.setHours(0,0,0,0); return x; }
+  function daysBetween(a,b){ return Math.round((startOfDay(b)-startOfDay(a))/86400000); }
+  function courseName(id){
+    var c = DATA.courses.find(function(c){ return c.color===id || c.id===id; });
+    return c ? c.name : id;
+  }
+
+  function renderSyncPill(){
+    var el = document.getElementById('syncPill');
+    if(!DATA.meta || !DATA.meta.lastSynced){ el.textContent = 'sin datos de sync'; return; }
+    var d = new Date(DATA.meta.lastSynced);
+    var label = DATA.meta.source === 'notion' ? 'sincronizado' : 'datos de ejemplo';
+    el.textContent = label + ' · ' + d.toLocaleDateString('es-AR', {day:'2-digit', month:'2-digit'}) + ' ' + d.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'});
+  }
+
+  function renderNotes(){
+    var row = document.getElementById('notesRow');
+    row.innerHTML = '';
+    DATA.courses.forEach(function(c){
+      var art = document.createElement('article');
+      art.className = 'sticky-note';
+      art.style.setProperty('--course-color', 'var(--'+c.color+')');
+      art.innerHTML =
+        '<span class="washi"></span>' +
+        '<p class="note-day">'+c.day+'</p>' +
+        '<h3 class="note-title">'+c.name+'</h3>' +
+        '<p class="note-meta"><b>'+c.time+'</b><br>'+c.mode+(c.professor ? ' · Prof. '+c.professor : '')+'</p>';
+      row.appendChild(art);
+    });
+  }
+
+  function renderCountdown(){
+    var today = new Date();
+    var upcoming = DATA.evaluations
+      .map(function(e){ return {label:e.label, diff:daysBetween(today, e.date+'T00:00:00')}; })
+      .filter(function(e){ return e.diff >= 0; })
+      .sort(function(a,b){ return a.diff-b.diff; });
+
+    var numEl=document.getElementById('cdNum'), labelEl=document.getElementById('cdLabel'),
+        eventEl=document.getElementById('cdEvent'), subEl=document.getElementById('cdSub');
+
+    if(!upcoming.length){
+      numEl.textContent='🌸'; labelEl.textContent='Por ahora'; eventEl.textContent='no hay nada anotado'; subEl.textContent='';
+      return;
+    }
+    var next = upcoming[0];
+    numEl.textContent = next.diff;
+    labelEl.textContent = next.diff===0 ? '¡Es hoy!' : (next.diff===1 ? 'Falta' : 'Faltan días para');
+    eventEl.textContent = next.label;
+    subEl.textContent = next.diff<=3 ? 'Ya casi — repasá un poquito hoy ✨' : 'Andá de a poco, vas bien.';
+  }
+
+  function renderTimeline(){
+    var ul = document.getElementById('timeline');
+    ul.innerHTML = '';
+    var today = new Date();
+    DATA.evaluations.forEach(function(e){
+      var diff = daysBetween(today, e.date+'T00:00:00');
+      var d = new Date(e.date+'T00:00:00');
+      var dateLabel = d.toLocaleDateString('es-AR', {day:'numeric', month:'short'});
+      var days = diff<0 ? 'pasó' : (diff===0 ? 'hoy' : diff===1 ? 'en 1 día' : 'en '+diff+' días');
+      var li = document.createElement('li');
+      li.style.setProperty('--tl-color', 'var(--'+e.course+')');
+      li.innerHTML =
+        '<span class="tl-dot"></span>' +
+        '<div class="tl-row"><span class="tl-label">'+e.label+'</span><span class="tl-days"'+(diff<0?' style="opacity:.45"':'')+'>'+days+'</span></div>' +
+        '<span class="tl-date">'+dateLabel+'</span>';
+      ul.appendChild(li);
+    });
+  }
+
+  function renderChecklist(){
+    var wrap = document.getElementById('checklist');
+    wrap.innerHTML = '';
+    var byCourse = {};
+    DATA.studyTasks.forEach(function(t){ (byCourse[t.course] = byCourse[t.course]||[]).push(t); });
+
+    var order = ['so','api','algo','redes'];
+    order.forEach(function(cid){
+      var tasks = byCourse[cid];
+      if(!tasks || !tasks.length) return;
+      var group = document.createElement('div');
+      group.className = 'course-group';
+      group.style.setProperty('--group-color', 'var(--'+cid+')');
+      var h3 = document.createElement('h3');
+      h3.textContent = courseName(cid);
+      group.appendChild(h3);
+      tasks.forEach(function(t){
+        var label = document.createElement('label');
+        label.className = 'check-item';
+        label.innerHTML = '<input type="checkbox" data-key="'+t.id+'"><span class="mark"></span><span class="txt">'+t.text+'</span>';
+        group.appendChild(label);
+      });
+      wrap.appendChild(group);
+    });
+
+    if(!DATA.studyTasks.length){
+      wrap.innerHTML = '<p class="empty-note">No hay tareas pendientes en Notion ahora mismo 🎉</p>';
+    }
+  }
+
+  function loadChecklistState(){
+    try{
+      var saved = JSON.parse(localStorage.getItem('semestreEnFlor.checklist')||'{}');
+      document.querySelectorAll('.check-item input').forEach(function(cb){
+        if(saved[cb.dataset.key]) cb.checked = true;
+      });
+    }catch(e){}
+  }
+  function saveChecklistState(){
+    try{
+      var state={};
+      document.querySelectorAll('.check-item input').forEach(function(cb){ state[cb.dataset.key]=cb.checked; });
+      localStorage.setItem('semestreEnFlor.checklist', JSON.stringify(state));
+    }catch(e){}
+  }
+
+  function updateBloom(){
+    var boxes = document.querySelectorAll('.check-item input');
+    var total = boxes.length, checked=0;
+    boxes.forEach(function(cb){ if(cb.checked) checked++; });
+    var pct = total? Math.round(checked/total*100) : 0;
+    document.getElementById('bloomPct').textContent = pct+'%';
+    var petals = document.querySelectorAll('#petals ellipse');
+    var toFill = total ? Math.round(checked/total*petals.length) : 0;
+    petals.forEach(function(p,i){ p.setAttribute('fill', i<toFill ? 'var(--accent)' : 'var(--line)'); });
+  }
+
+  function burst(x,y){
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var chars=['✦','♡','✧'];
+    for(var i=0;i<4;i++){
+      var s=document.createElement('span');
+      s.className='burst-particle'; s.textContent=chars[i%chars.length];
+      s.style.left=(x+(Math.random()*30-15))+'px'; s.style.top=(y+(Math.random()*10-5))+'px';
+      document.body.appendChild(s);
+      setTimeout((function(el){ return function(){ el.remove(); }; })(s), 750);
+    }
+  }
+
+  function initChecklistBehavior(){
+    loadChecklistState();
+    updateBloom();
+    document.querySelectorAll('.check-item input').forEach(function(cb){
+      cb.addEventListener('change', function(){
+        saveChecklistState();
+        updateBloom();
+        if(cb.checked){
+          var r=cb.closest('.check-item').getBoundingClientRect();
+          burst(r.left+16, r.top+12);
+        }
+      });
+    });
+  }
+
+  function initReveal(){
+    var items=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window) || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+      items.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {threshold:.15});
+    items.forEach(function(el){ io.observe(el); });
+  }
+
+  fetch('./data.json', {cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      DATA = json;
+      renderSyncPill();
+      renderNotes();
+      renderCountdown();
+      renderTimeline();
+      renderChecklist();
+      initChecklistBehavior();
+      initReveal();
+    })
+    .catch(function(err){
+      document.getElementById('syncPill').textContent = 'error cargando data.json';
+      console.error(err);
+    });
+})();
+</script>
+</body>
+</html>
