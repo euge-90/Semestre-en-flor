@@ -1,10 +1,16 @@
 # 🌸 Semestre en Flor
 
-Tu semestre (Q2 2026) en una página web propia: materias, evaluaciones, plan de estudio y calendario — todo se actualiza solo cuando editás tus bases de Notion o tu Google Calendar. Gratis, en GitHub Pages, sin backend.
+Tu semestre (Q2 2026) como una agenda real, con vista semanal navegable: materias, evaluaciones, vacaciones, recitales, tu rutina de nado/gym y plan de estudio — todo se actualiza solo cuando editás tus bases de Notion o tu Google Calendar. Gratis, en GitHub Pages, sin backend.
+
+## Vista "Semana"
+
+La pestaña principal es una agenda tipo cuadrícula (como una agenda de papel): columnas por día, filas por hora, con tus 4 materias ubicadas en su horario real y una fila arriba de cada día con "banderines" de vacaciones/recitales/evaluaciones. Navegás semana a semana con las flechitas o volvés a "hoy" con un click. Tu rutina de natación y gym aparece en rayado, como recordatorio (no cuenta para nada de la facultad, es solo para que veas el día completo).
+
+Esto sale de dos columnas nuevas que ya agregué a tu base de Notion **"📚 Calendario + Evaluaciones"**: **"Día"** (para las 4 materias) y **"Días"** (para rutinas que se repiten más de un día, como Natación/Gym). Si en algún momento agregás una materia o rutina nueva ahí, completá esas columnas igual que las existentes y va a aparecer sola en la agenda la próxima sincronización.
 
 ## Cómo funciona
 
-- `index.html` — la página. Lee `data.json` y dibuja todo (cronograma, cuenta regresiva al próximo parcial, timeline, checklist con progreso).
+- `index.html` — la página. Lee `data.json` y dibuja todo (agenda semanal, cuenta regresiva al próximo parcial, fechas clave, checklist con progreso).
 - `data.json` — los datos. Arranca con datos de ejemplo (los tuyos, tal cual están hoy en Notion) para que la página funcione apenas la subas.
 - `scripts/sync-notion.mjs` — un script que se conecta a tus dos bases de Notion y regenera `data.json` con lo que encuentre ahí.
 - `.github/workflows/sync-notion.yml` — hace correr ese script solo, cada 6 horas, y cada vez que lo pidas manualmente. Si `data.json` cambió, lo commitea al repo automáticamente.

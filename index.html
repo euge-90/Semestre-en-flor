@@ -41,7 +41,7 @@
     background-attachment:fixed; color:var(--ink); font-family:'Quicksand',-apple-system,BlinkMacSystemFont,sans-serif;
   }
   h1,h2,h3{font-family:'Fraunces',Georgia,serif; text-wrap:balance; margin:0}
-  .page{max-width:640px; margin:0 auto; padding-inline:20px; padding-block:36px 60px; position:relative}
+  .page{max-width:760px; margin:0 auto; padding-inline:20px; padding-block:36px 60px; position:relative}
   .floaties{position:absolute; inset:0; top:0; height:520px; overflow:hidden; pointer-events:none; z-index:0}
   .floaty{position:absolute; font-size:1.4rem; color:var(--accent-gold); opacity:.55; animation:drift 13s ease-in-out infinite}
   .floaty.star{color:var(--accent-2)} .floaty.heart{color:var(--accent)}
@@ -63,9 +63,43 @@
   .countdown-event{font-weight:700; font-size:1.02rem; color:var(--ink)}
   .countdown-sub{font-size:.85rem; color:var(--ink-soft); margin-top:2px}
 
-  .section{margin-top:46px; position:relative; z-index:1}
-  .section-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
-  .section h2{font-size:1.5rem; font-weight:600; font-style:italic}
+  .tabs{display:flex; gap:8px; margin-top:32px; overflow-x:auto; padding-bottom:2px; position:relative; z-index:1}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab-btn{flex:0 0 auto; font-family:'Quicksand'; font-weight:700; font-size:.8rem; padding:9px 16px; border-radius:99px; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft); cursor:pointer; transition:background .2s ease, color .2s ease}
+  .tab-btn.active{background:var(--accent); color:#fff5f8; border-color:var(--accent)}
+  .tab-panel{display:none; margin-top:22px; position:relative; z-index:1}
+  .tab-panel.active{display:block}
+  .section-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px}
+  .section-head h2{font-size:1.35rem; font-weight:600; font-style:italic}
+
+  /* --- semana / agenda grid --- */
+  .week-nav{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px}
+  .week-nav-btns{display:flex; align-items:center; gap:8px}
+  .nav-btn{width:32px; height:32px; border-radius:50%; border:1px solid var(--line); background:var(--surface); color:var(--ink); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center}
+  .nav-btn:hover{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .week-range{font-family:'Fraunces'; font-style:italic; font-weight:600; font-size:1rem; white-space:nowrap}
+  .today-btn{font-size:.72rem; font-weight:700; color:var(--accent); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:0}
+
+  .agenda-wrap{overflow-x:auto; border-radius:18px; box-shadow:var(--shadow-sm); border:1px solid var(--line); background:var(--surface)}
+  .agenda{min-width:600px; display:grid; grid-template-columns:42px repeat(7,1fr); grid-template-rows:auto auto repeat(30,22px)}
+  .corner{border-bottom:1px solid var(--line)}
+  .day-head{padding:9px 3px 7px; text-align:center; font-weight:700; font-size:.66rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); border-bottom:1px solid var(--line); border-left:1px solid var(--line)}
+  .day-head .num{display:block; font-family:'Fraunces'; font-style:italic; font-weight:600; font-size:1.05rem; color:var(--ink); margin-top:1px}
+  .day-head.today{color:var(--accent)}
+  .day-head.today .num{color:var(--accent)}
+  .allday-cell{padding:4px 3px; display:flex; flex-direction:column; gap:3px; border-bottom:1px solid var(--line); border-left:1px solid var(--line); min-height:8px}
+  .allday-chip{font-size:.6rem; font-weight:700; padding:3px 5px; border-radius:6px; line-height:1.2; background:var(--chip-color); color:#fff; cursor:default}
+  .allday-chip.baja{opacity:.5}
+  .allday-chip.media{opacity:.85}
+  .allday-chip.alta{box-shadow:0 0 0 2px color-mix(in srgb, var(--chip-color) 45%, transparent)}
+  .hour-label{font-size:.62rem; color:var(--ink-faint); text-align:right; padding-right:5px; border-top:1px solid var(--line); grid-column:1}
+  .ag-block{border-radius:7px; padding:3px 5px; font-size:.66rem; line-height:1.2; overflow:hidden; background:color-mix(in srgb, var(--block-color) 24%, var(--surface)); border-left:3px solid var(--block-color); color:var(--ink); margin:1px 2px}
+  .ag-block b{display:block; font-weight:700; font-size:.68rem; margin-bottom:1px}
+  .ag-block.habit{opacity:.68; border-left-style:dashed; font-style:italic}
+  .legend{display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:14px; font-size:.74rem; color:var(--ink-soft)}
+  .legend span{display:inline-flex; align-items:center; gap:5px}
+  .legend i{width:9px; height:9px; border-radius:50%; background:var(--dot-color); display:inline-block}
+  .week-empty{text-align:center; padding:26px 10px; color:var(--ink-faint); font-size:.88rem; font-style:italic}
 
   .notes-row{display:grid; grid-template-columns:1fr; gap:22px}
   @media (min-width:560px){ .notes-row{grid-template-columns:1fr 1fr} }
@@ -136,12 +170,34 @@
     </div>
   </header>
 
-  <section class="section reveal">
-    <div class="section-head"><h2>Mi semana</h2></div>
-    <div class="notes-row" id="notesRow"></div>
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="semana">🗓️ Semana</button>
+    <button class="tab-btn" data-tab="fechas">📌 Fechas clave</button>
+    <button class="tab-btn" data-tab="estudio">🌱 Plan de estudio</button>
+    <button class="tab-btn" data-tab="calendario">🔗 Google Calendar</button>
+  </nav>
+
+  <section class="tab-panel active reveal" id="panel-semana">
+    <div class="week-nav">
+      <div class="week-nav-btns">
+        <button class="nav-btn" id="prevWeek" aria-label="Semana anterior">‹</button>
+        <span class="week-range" id="weekRange">–</span>
+        <button class="nav-btn" id="nextWeek" aria-label="Semana siguiente">›</button>
+      </div>
+      <button class="today-btn" id="todayBtn">hoy</button>
+    </div>
+    <div class="agenda-wrap">
+      <div class="agenda" id="agendaGrid"></div>
+    </div>
+    <div class="legend" id="legend"></div>
   </section>
 
-  <section class="section reveal">
+  <section class="tab-panel reveal" id="panel-fechas">
+    <div class="section-head"><h2>Fechas clave</h2></div>
+    <ul class="timeline" id="timeline"></ul>
+  </section>
+
+  <section class="tab-panel reveal" id="panel-estudio">
     <div class="section-head">
       <h2>Plan de estudio</h2>
       <div class="bloom-wrap">
@@ -159,15 +215,11 @@
         <span class="bloom-pct" id="bloomPct">0%</span>
       </div>
     </div>
+    <div class="notes-row" id="notesRow" style="margin-bottom:26px"></div>
     <div id="checklist"></div>
   </section>
 
-  <section class="section reveal">
-    <div class="section-head"><h2>Fechas clave</h2></div>
-    <ul class="timeline" id="timeline"></ul>
-  </section>
-
-  <section class="section reveal">
+  <section class="tab-panel reveal" id="panel-calendario">
     <div class="section-head"><h2>Google Calendar</h2></div>
     <div class="cal-embed">
       <iframe src="https://calendar.google.com/calendar/embed?src=ojedaeugenia08%40gmail.com&ctz=America%2FArgentina%2FBuenos_Aires&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0" loading="lazy"></iframe>
@@ -181,12 +233,25 @@
 <script>
 (function(){
   var DATA = null;
+  var currentMonday = mondayOf(new Date());
+  var WD = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  var HOUR_START = 8, HOUR_END = 22; // grilla 8:00–23:00
 
+  function mondayOf(d){ var x=new Date(d); var day=x.getDay(); var diff=(day===0?-6:1-day); x.setDate(x.getDate()+diff); x.setHours(0,0,0,0); return x; }
+  function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function iso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
   function startOfDay(d){ var x=new Date(d); x.setHours(0,0,0,0); return x; }
   function daysBetween(a,b){ return Math.round((startOfDay(b)-startOfDay(a))/86400000); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function courseName(id){
     var c = DATA.courses.find(function(c){ return c.color===id || c.id===id; });
     return c ? c.name : id;
+  }
+  function timeToRow(hhmm){
+    if(!hhmm) return null;
+    var parts = hhmm.split(':'); var h=parseInt(parts[0],10), m=parseInt(parts[1]||'0',10);
+    var mins = (h*60+m) - HOUR_START*60;
+    return Math.round(mins/30);
   }
 
   function renderSyncPill(){
@@ -195,22 +260,6 @@
     var d = new Date(DATA.meta.lastSynced);
     var label = DATA.meta.source === 'notion' ? 'sincronizado' : 'datos de ejemplo';
     el.textContent = label + ' · ' + d.toLocaleDateString('es-AR', {day:'2-digit', month:'2-digit'}) + ' ' + d.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'});
-  }
-
-  function renderNotes(){
-    var row = document.getElementById('notesRow');
-    row.innerHTML = '';
-    DATA.courses.forEach(function(c){
-      var art = document.createElement('article');
-      art.className = 'sticky-note';
-      art.style.setProperty('--course-color', 'var(--'+c.color+')');
-      art.innerHTML =
-        '<span class="washi"></span>' +
-        '<p class="note-day">'+c.day+'</p>' +
-        '<h3 class="note-title">'+c.name+'</h3>' +
-        '<p class="note-meta"><b>'+c.time+'</b><br>'+c.mode+(c.professor ? ' · Prof. '+c.professor : '')+'</p>';
-      row.appendChild(art);
-    });
   }
 
   function renderCountdown(){
@@ -232,6 +281,105 @@
     labelEl.textContent = next.diff===0 ? '¡Es hoy!' : (next.diff===1 ? 'Falta' : 'Faltan días para');
     eventEl.textContent = next.label;
     subEl.textContent = next.diff<=3 ? 'Ya casi — repasá un poquito hoy ✨' : 'Andá de a poco, vas bien.';
+  }
+
+  // ---------- Semana / agenda ----------
+  function weekRangeLabel(monday){
+    var sunday = addDays(monday,6);
+    var a = monday.toLocaleDateString('es-AR', {day:'numeric', month: monday.getMonth()===sunday.getMonth() ? undefined : 'short'});
+    var b = sunday.toLocaleDateString('es-AR', {day:'numeric', month:'short'});
+    return a + ' – ' + b;
+  }
+
+  function eventsForDay(dateStr){
+    var items = [];
+    DATA.evaluations.forEach(function(e){
+      if(e.date === dateStr) items.push({label:e.label, note:'', priority:'Media', colorVar:e.course, kind:'eval'});
+    });
+    (DATA.personalEvents||[]).forEach(function(p){
+      if(dateStr >= p.dateStart && dateStr <= p.dateEnd){
+        items.push({label:p.label, note:p.note, priority:p.priority||'Media', colorVar: p.type==='vacaciones' ? 'personal' : 'accent', kind:p.type});
+      }
+    });
+    return items;
+  }
+
+  function renderAgenda(){
+    var grid = document.getElementById('agendaGrid');
+    var today = iso(new Date());
+    var html = '';
+
+    html += '<div class="corner"></div>';
+    for(var i=0;i<7;i++){
+      var d = addDays(currentMonday,i);
+      var isToday = iso(d)===today;
+      html += '<div class="day-head'+(isToday?' today':'')+'">'+WD[i]+'<span class="num">'+d.getDate()+'</span></div>';
+    }
+
+    html += '<div class="corner" style="border-bottom:none"></div>';
+    for(i=0;i<7;i++){
+      var dd = addDays(currentMonday,i);
+      var evs = eventsForDay(iso(dd));
+      var chips = evs.map(function(ev){
+        var cls = (ev.priority||'media').toLowerCase();
+        return '<span class="allday-chip '+cls+'" style="--chip-color:var(--'+ev.colorVar+')" title="'+esc(ev.note||ev.label)+'">'+esc(ev.label)+'</span>';
+      }).join('');
+      html += '<div class="allday-cell">'+chips+'</div>';
+    }
+
+    for(var h=HOUR_START; h<=HOUR_END; h++){
+      var row = 3 + (h-HOUR_START)*2;
+      html += '<div class="hour-label" style="grid-row:'+row+' / span 2">'+h+'</div>';
+    }
+
+    var blocks = [];
+    (DATA.courses||[]).forEach(function(c){ blocks.push({item:c, habit:false}); });
+    (DATA.habits||[]).forEach(function(hb){ blocks.push({item:hb, habit:true}); });
+
+    blocks.forEach(function(b){
+      var item = b.item;
+      if(!item.startTime || !item.endTime || !item.dow || !item.dow.length) return;
+      var r0 = timeToRow(item.startTime), r1 = timeToRow(item.endTime);
+      if(r0===null || r1===null || r1<=r0) return;
+      var gridRow = (3+r0) + ' / span ' + (r1-r0);
+      item.dow.forEach(function(dow){
+        if(dow<1 || dow>7) return;
+        var col = dow+1;
+        html += '<div class="ag-block'+(b.habit?' habit':'')+'" style="grid-column:'+col+'; grid-row:'+gridRow+'; --block-color:var(--'+item.color+')">' +
+          '<b>'+esc(item.name)+'</b>' + (b.habit ? '' : esc(item.startTime+'–'+item.endTime)) +
+          '</div>';
+      });
+    });
+
+    grid.innerHTML = html;
+    document.getElementById('weekRange').textContent = weekRangeLabel(currentMonday);
+  }
+
+  function renderLegend(){
+    var el = document.getElementById('legend');
+    var order = [['so','SO'],['api','API'],['algo','Algoritmos'],['redes','Redes'],['personal','Rutina / personal']];
+    el.innerHTML = order.map(function(o){
+      return '<span><i style="--dot-color:var(--'+o[0]+')"></i>'+o[1]+'</span>';
+    }).join('') + '<span style="opacity:.7">chip más marcado = mayor prioridad de conflicto</span>';
+  }
+
+  // ---------- otras secciones (sin cambios de fondo) ----------
+  function renderNotes(){
+    var row = document.getElementById('notesRow');
+    row.innerHTML = '';
+    var dayNames = {1:'Lunes',2:'Martes',3:'Miércoles',4:'Jueves',5:'Viernes',6:'Sábado',7:'Domingo'};
+    DATA.courses.forEach(function(c){
+      var art = document.createElement('article');
+      art.className = 'sticky-note';
+      art.style.setProperty('--course-color', 'var(--'+c.color+')');
+      var dayLabel = (c.dow && c.dow.length) ? c.dow.map(function(n){return dayNames[n];}).join(' y ') : '';
+      art.innerHTML =
+        '<span class="washi"></span>' +
+        '<p class="note-day">'+dayLabel+'</p>' +
+        '<h3 class="note-title">'+c.name+'</h3>' +
+        '<p class="note-meta"><b>'+(c.time||'')+'</b><br>'+c.mode+(c.professor ? ' · Prof. '+c.professor : '')+'</p>';
+      row.appendChild(art);
+    });
   }
 
   function renderTimeline(){
@@ -337,6 +485,24 @@
     });
   }
 
+  function initTabs(){
+    var btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        btns.forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+      });
+    });
+  }
+
+  function initWeekNav(){
+    document.getElementById('prevWeek').addEventListener('click', function(){ currentMonday = addDays(currentMonday,-7); renderAgenda(); });
+    document.getElementById('nextWeek').addEventListener('click', function(){ currentMonday = addDays(currentMonday,7); renderAgenda(); });
+    document.getElementById('todayBtn').addEventListener('click', function(){ currentMonday = mondayOf(new Date()); renderAgenda(); });
+  }
+
   function initReveal(){
     var items=document.querySelectorAll('.reveal');
     if(!('IntersectionObserver' in window) || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
@@ -345,7 +511,7 @@
     }
     var io=new IntersectionObserver(function(entries){
       entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, {threshold:.15});
+    }, {threshold:.1});
     items.forEach(function(el){ io.observe(el); });
   }
 
@@ -354,11 +520,15 @@
     .then(function(json){
       DATA = json;
       renderSyncPill();
-      renderNotes();
       renderCountdown();
+      renderAgenda();
+      renderLegend();
+      renderNotes();
       renderTimeline();
       renderChecklist();
       initChecklistBehavior();
+      initTabs();
+      initWeekNav();
       initReveal();
     })
     .catch(function(err){

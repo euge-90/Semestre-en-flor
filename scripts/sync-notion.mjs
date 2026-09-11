@@ -17,6 +17,8 @@ if (!TOKEN || !DB_CALENDAR || !DB_STUDY) {
   process.exit(1);
 }
 
+const DOW = { "Lunes": 1, "Martes": 2, "Miércoles": 3, "Jueves": 4, "Viernes": 5, "Sábado": 6, "Domingo": 7 };
+
 async function queryDatabase(databaseId) {
   let results = [];
   let cursor = undefined;
@@ -52,8 +54,15 @@ function getRichText(page, prop) {
 function getSelect(page, prop) {
   return page.properties?.[prop]?.select?.name || "";
 }
+function getMultiSelect(page, prop) {
+  const arr = page.properties?.[prop]?.multi_select;
+  return arr && arr.length ? arr.map(o => o.name) : [];
+}
 function getDate(page, prop) {
   return page.properties?.[prop]?.date?.start || "";
+}
+function getDateEnd(page, prop) {
+  return page.properties?.[prop]?.date?.end || "";
 }
 function getNumber(page, prop) {
   const n = page.properties?.[prop]?.number;
@@ -63,7 +72,23 @@ function getNumber(page, prop) {
 // mapea el valor de "Curso" de Notion (SO/API/Algoritmos/Redes/Personal) a nuestro id corto
 function courseId(cursoValue) {
   const map = { SO: "so", API: "api", Algoritmos: "algo", Redes: "redes", Personal: "personal" };
-  return map[cursoValue] || cursoValue.toLowerCase();
+  return map[cursoValue] || (cursoValue ? cursoValue.toLowerCase() : "personal");
+}
+
+// separa "18:30-22:30" / "18:30 – 22:30" / "8-9am" en {start:"HH:MM", end:"HH:MM"}
+function parseHora(hora) {
+  if (!hora) return null;
+  const m = hora.match(/(\d{1,2})(?::(\d{2}))?\s*[-–—]\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+  if (!m) return null;
+  let [, h1, m1, h2, m2, ampm] = m;
+  h1 = parseInt(h1, 10); h2 = parseInt(h2, 10);
+  m1 = m1 || "00"; m2 = m2 || "00";
+  if (ampm && ampm.toLowerCase() === "pm") {
+    if (h1 < 12) h1 += 12;
+    if (h2 < 12) h2 += 12;
+  }
+  const pad = n => String(n).padStart(2, "0");
+  return { start: `${pad(h1)}:${m1}`, end: `${pad(h2)}:${m2}` };
 }
 
 async function main() {
@@ -73,25 +98,32 @@ async function main() {
     queryDatabase(DB_STUDY)
   ]);
 
-  // --- Calendario + Evaluaciones -> courses (Tipo=Curso) y evaluations (Tipo=Evaluación / Entrega TPO) ---
   const courses = [];
+  const habits = [];
   const evaluations = [];
+  const personalEvents = [];
 
   for (const page of calendarPages) {
     const tipo = getSelect(page, "Tipo");
     const evento = getTitle(page, "Evento");
-    const curso = courseId(getSelect(page, "Curso") || "personal");
+    const curso = courseId(getSelect(page, "Curso") || "Personal");
     const fechaInicio = getDate(page, "Fecha Inicio");
+    const fechaFin = getDateEnd(page, "Fecha Inicio") || getDate(page, "Fecha Fin") || fechaInicio;
+    const horaTxt = getRichText(page, "Hora");
+    const horaParsed = parseHora(horaTxt);
 
     if (tipo === "Curso") {
+      const diaSel = getSelect(page, "Día");
       courses.push({
         id: page.id,
         name: evento,
-        color: curso,
-        time: getRichText(page, "Hora"),
+        dow: diaSel && DOW[diaSel] ? [DOW[diaSel]] : [],
+        startTime: horaParsed ? horaParsed.start : "",
+        endTime: horaParsed ? horaParsed.end : "",
+        time: horaTxt,
         mode: getRichText(page, "Sala/Link"),
         professor: getRichText(page, "Profesor"),
-        details: getRichText(page, "Detalles")
+        color: curso
       });
     } else if ((tipo === "Evaluación" || tipo === "Entrega TPO") && fechaInicio) {
       evaluations.push({
@@ -100,9 +132,33 @@ async function main() {
         label: evento,
         course: curso
       });
+    } else if (tipo === "Vacaciones" || tipo === "Evento Personal") {
+      const diasMulti = getMultiSelect(page, "Días");
+      if (diasMulti.length) {
+        // rutina recurrente semanal (ej. natación, gym) en vez de fecha puntual
+        habits.push({
+          id: page.id,
+          name: evento,
+          dow: diasMulti.map(d => DOW[d]).filter(Boolean),
+          startTime: horaParsed ? horaParsed.start : "",
+          endTime: horaParsed ? horaParsed.end : "",
+          color: "personal"
+        });
+      } else if (fechaInicio) {
+        personalEvents.push({
+          id: page.id,
+          type: tipo === "Vacaciones" ? "vacaciones" : "evento",
+          dateStart: fechaInicio,
+          dateEnd: fechaFin || fechaInicio,
+          label: evento,
+          note: getRichText(page, "Detalles"),
+          priority: getSelect(page, "Prioridad") || "Media"
+        });
+      }
     }
   }
   evaluations.sort((a, b) => a.date.localeCompare(b.date));
+  personalEvents.sort((a, b) => a.dateStart.localeCompare(b.dateStart));
 
   // --- Plan de Estudio Semanal -> studyTasks (solo Pendiente / En Progreso) ---
   const studyTasks = [];
@@ -123,13 +179,15 @@ async function main() {
   const data = {
     meta: { lastSynced: new Date().toISOString(), source: "notion" },
     courses,
+    habits,
     evaluations,
+    personalEvents,
     studyTasks
   };
 
   const fs = await import("node:fs/promises");
   await fs.writeFile(new URL("../data.json", import.meta.url), JSON.stringify(data, null, 2) + "\n");
-  console.log(`Listo: ${courses.length} materias, ${evaluations.length} fechas, ${studyTasks.length} tareas pendientes.`);
+  console.log(`Listo: ${courses.length} materias, ${habits.length} rutinas, ${evaluations.length} fechas, ${personalEvents.length} eventos personales, ${studyTasks.length} tareas pendientes.`);
 }
 
 main().catch(err => {

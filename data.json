@@ -4,10 +4,14 @@
     "source": "seed"
   },
   "courses": [
-    { "id": "so", "name": "Sistemas Operativos", "day": "Martes", "time": "18:30 – 22:30", "mode": "Online", "professor": "Luiyi Sánchez", "color": "so" },
-    { "id": "api", "name": "Aplicaciones Interactivas", "day": "Jueves", "time": "18:30 – 22:30", "mode": "Online", "professor": "Baltazar Sánchez", "color": "api" },
-    { "id": "algo", "name": "Algoritmos y Estructuras I", "day": "Viernes", "time": "13:30 – 17:30", "mode": "Aula 548 · Monserrat", "professor": "Julia Monasterio", "color": "algo" },
-    { "id": "redes", "name": "Redes de Datos", "day": "Viernes", "time": "18:45 – 22:15", "mode": "Aula 663 · Monserrat", "professor": "Leonardo Giordano", "color": "redes" }
+    { "id": "so", "name": "Sistemas Operativos", "dow": [2], "startTime": "18:30", "endTime": "22:30", "time": "18:30 – 22:30", "mode": "Online", "professor": "Luiyi Sánchez", "color": "so" },
+    { "id": "api", "name": "Aplicaciones Interactivas", "dow": [4], "startTime": "18:30", "endTime": "22:30", "time": "18:30 – 22:30", "mode": "Online", "professor": "Baltazar Sánchez", "color": "api" },
+    { "id": "algo", "name": "Algoritmos y Estructuras I", "dow": [5], "startTime": "13:30", "endTime": "17:30", "time": "13:30 – 17:30", "mode": "Aula 548 · Monserrat", "professor": "Julia Monasterio", "color": "algo" },
+    { "id": "redes", "name": "Redes de Datos", "dow": [5], "startTime": "18:45", "endTime": "22:15", "time": "18:45 – 22:15", "mode": "Aula 663 · Monserrat", "professor": "Leonardo Giordano", "color": "redes" }
+  ],
+  "habits": [
+    { "id": "natacion", "name": "Natación", "dow": [1, 5], "startTime": "08:00", "endTime": "09:00", "color": "personal" },
+    { "id": "gym", "name": "Gym", "dow": [2, 3, 4], "startTime": "08:00", "endTime": "09:00", "color": "personal" }
   ],
   "evaluations": [
     { "id": "eval-1", "date": "2026-09-21", "label": "Entrega Actividad 2 (IA) — SO", "course": "so" },
@@ -19,6 +23,17 @@
     { "id": "eval-7", "date": "2026-12-11", "label": "Final — Redes de Datos y Algoritmos", "course": "redes" },
     { "id": "eval-8", "date": "2026-12-17", "label": "Final — Aplicaciones Interactivas", "course": "api" },
     { "id": "eval-9", "date": "2026-12-22", "label": "Final — Sistemas Operativos", "course": "so" }
+  ],
+  "personalEvents": [
+    { "id": "pe-1", "type": "vacaciones", "dateStart": "2026-09-14", "dateEnd": "2026-09-18", "label": "Vacaciones (semana)", "note": "Vacaciones del trabajo (Accenture) — sigue cursando normalmente, no falta a SO/API/Algoritmos/Redes", "priority": "Baja" },
+    { "id": "pe-2", "type": "vacaciones", "dateStart": "2026-10-20", "dateEnd": "2026-10-20", "label": "Vacaciones", "note": "Es martes — coincide con clase de SO. Y a 2 días del Parcial de API (22/10)", "priority": "Media" },
+    { "id": "pe-3", "type": "evento", "dateStart": "2026-10-20", "dateEnd": "2026-10-20", "label": "🎸 Recital: Iron Maiden", "note": "2 días antes del Parcial de API (22/10) — estudiar antes de ir", "priority": "Alta" },
+    { "id": "pe-4", "type": "vacaciones", "dateStart": "2026-10-21", "dateEnd": "2026-10-21", "label": "Vacaciones", "note": "Miércoles, sin clases ese día", "priority": "Baja" },
+    { "id": "pe-5", "type": "evento", "dateStart": "2026-11-15", "dateEnd": "2026-11-15", "label": "🎸 Recital: Hayley Williams", "note": "Domingo, sin conflicto de cursada", "priority": "Baja" },
+    { "id": "pe-6", "type": "vacaciones", "dateStart": "2026-11-16", "dateEnd": "2026-11-16", "label": "Vacaciones", "note": "Lunes, sin clases ese día (pero pisa natación de la mañana)", "priority": "Baja" },
+    { "id": "pe-7", "type": "evento", "dateStart": "2026-11-26", "dateEnd": "2026-11-26", "label": "🎸 Recital: Johnny Marr", "note": "Jueves — mismo día que tus vacaciones y tu clase de Aplicaciones Interactivas", "priority": "Media" },
+    { "id": "pe-8", "type": "vacaciones", "dateStart": "2026-11-26", "dateEnd": "2026-11-26", "label": "Vacaciones", "note": "Es jueves — coincide con clase de Aplicaciones Interactivas", "priority": "Media" },
+    { "id": "pe-9", "type": "evento", "dateStart": "2026-12-09", "dateEnd": "2026-12-09", "label": "🎸 Recital: Sleeping With Sirens", "note": "Miércoles, sin conflicto de cursada", "priority": "Baja" }
   ],
   "studyTasks": [
     { "id": "so-1", "course": "so", "text": "Repasar Gestión de Procesos (U2)" },
