@@ -22,7 +22,12 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Omitir sync si faltan secrets
+        if: ${{ secrets.NOTION_TOKEN == '' || secrets.NOTION_DB_CALENDAR == '' || secrets.NOTION_DB_STUDY == '' }}
+        run: echo "Faltan secrets de Notion; se omite el sync."
+
       - name: Traer datos de Notion
+        if: ${{ secrets.NOTION_TOKEN != '' && secrets.NOTION_DB_CALENDAR != '' && secrets.NOTION_DB_STUDY != '' }}
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DB_CALENDAR: ${{ secrets.NOTION_DB_CALENDAR }}
@@ -30,6 +35,7 @@ jobs:
         run: node scripts/sync-notion.mjs
 
       - name: Commitear data.json si cambió
+        if: ${{ secrets.NOTION_TOKEN != '' && secrets.NOTION_DB_CALENDAR != '' && secrets.NOTION_DB_STUDY != '' }}
         run: |
           git config user.name "semestre-en-flor-bot"
           git config user.email "actions@github.com"
