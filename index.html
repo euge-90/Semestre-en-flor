@@ -80,6 +80,22 @@
   .week-range{font-family:'Fraunces'; font-style:italic; font-weight:600; font-size:1rem; white-space:nowrap}
   .today-btn{font-size:.72rem; font-weight:700; color:var(--accent); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:0}
 
+  .study-rating{display:flex; align-items:center; gap:8px; margin:2px 0 16px; flex-wrap:wrap}
+  .study-rating-label{font-size:.76rem; color:var(--ink-soft)}
+  .study-rating .stars{display:flex; gap:3px}
+  .study-rating .star{font-size:1.15rem; line-height:1; color:var(--line); cursor:pointer; background:none; border:none; padding:0}
+  .study-rating .star.on{color:var(--accent-gold)}
+
+  .triage{display:grid; grid-template-columns:1fr; gap:14px; margin:18px 0 8px}
+  @media (min-width:640px){ .triage{grid-template-columns:repeat(3,1fr)} }
+  .triage-col{background:var(--surface); border-radius:14px; border:1px solid var(--line); padding:12px 14px; box-shadow:var(--shadow-sm)}
+  .triage-col h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin:0 0 8px}
+  .triage-col.urgente h4{color:var(--accent)}
+  .triage-col.olvidar h4{color:var(--accent-gold)}
+  .triage-col.espera h4{color:var(--algo)}
+  .triage-col textarea{width:100%; min-height:110px; border:none; background:transparent; resize:vertical; font-family:'Quicksand'; font-size:.85rem; color:var(--ink); outline:none; line-height:1.6; padding:0}
+  .triage-col textarea::placeholder{color:var(--ink-faint)}
+
   .agenda-wrap{overflow-x:auto; border-radius:18px; box-shadow:var(--shadow-sm); border:1px solid var(--line); background:var(--surface)}
   .agenda{min-width:600px; display:grid; grid-template-columns:42px repeat(7,1fr); grid-template-rows:auto auto repeat(30,22px)}
   .corner{border-bottom:1px solid var(--line)}
@@ -100,6 +116,21 @@
   .legend span{display:inline-flex; align-items:center; gap:5px}
   .legend i{width:9px; height:9px; border-radius:50%; background:var(--dot-color); display:inline-block}
   .week-empty{text-align:center; padding:26px 10px; color:var(--ink-faint); font-size:.88rem; font-style:italic}
+
+  .notes-week-head{margin-top:30px; display:flex; align-items:baseline; justify-content:space-between; gap:10px}
+  .notes-week-head h2{font-size:1.1rem; font-weight:600; font-style:italic}
+  .notes-week-note{font-size:.72rem; color:var(--ink-faint); margin:4px 0 14px; line-height:1.5}
+  .notes-week{display:grid; grid-template-columns:1fr; gap:10px}
+  @media (min-width:640px){ .notes-week{grid-template-columns:1fr 1fr} }
+  .notes-day{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px 14px; box-shadow:var(--shadow-sm)}
+  .notes-day.today{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent), var(--shadow-sm)}
+  .notes-day-head{display:flex; align-items:baseline; gap:8px}
+  .notes-day-name{font-family:'Fraunces'; font-style:italic; font-weight:600; font-size:.92rem}
+  .notes-day-date{font-size:.7rem; color:var(--ink-faint)}
+  .notes-saved{font-size:.62rem; color:var(--accent); opacity:0; transition:opacity .3s ease; margin-left:auto; font-weight:700}
+  .notes-saved.show{opacity:1}
+  .notes-day textarea{width:100%; border:none; background:transparent; resize:vertical; min-height:48px; font-family:'Quicksand'; font-size:.88rem; color:var(--ink); outline:none; line-height:1.5; margin-top:4px; padding:0; font-weight:500}
+  .notes-day textarea::placeholder{color:var(--ink-faint)}
 
   .notes-row{display:grid; grid-template-columns:1fr; gap:22px}
   @media (min-width:560px){ .notes-row{grid-template-columns:1fr 1fr} }
@@ -186,10 +217,18 @@
       </div>
       <button class="today-btn" id="todayBtn">hoy</button>
     </div>
+    <div class="study-rating" id="studyRating">
+      <span class="study-rating-label">¿Cómo estudié esta semana?</span>
+      <span class="stars" id="ratingStars"></span>
+    </div>
     <div class="agenda-wrap">
       <div class="agenda" id="agendaGrid"></div>
     </div>
     <div class="legend" id="legend"></div>
+
+    <div class="notes-week-head"><h2>📝 Notas de la semana</h2></div>
+    <p class="notes-week-note">Tu segundo cerebro del día a día — anotá lo que quieras en cada casillero. Se guarda solo (y automáticamente) en este navegador, como el checklist de abajo.</p>
+    <div class="notes-week" id="notesWeek"></div>
   </section>
 
   <section class="tab-panel reveal" id="panel-fechas">
@@ -214,6 +253,11 @@
         </svg>
         <span class="bloom-pct" id="bloomPct">0%</span>
       </div>
+    </div>
+    <div class="triage" id="triageBoard">
+      <div class="triage-col urgente"><h4>🔴 Urgente</h4><textarea data-col="urgente" placeholder="lo que no puede esperar…"></textarea></div>
+      <div class="triage-col olvidar"><h4>🟡 No olvidar</h4><textarea data-col="olvidar" placeholder="para tener presente…"></textarea></div>
+      <div class="triage-col espera"><h4>🟢 Puede esperar</h4><textarea data-col="espera" placeholder="para más adelante…"></textarea></div>
     </div>
     <div class="notes-row" id="notesRow" style="margin-bottom:26px"></div>
     <div id="checklist"></div>
@@ -353,6 +397,92 @@
 
     grid.innerHTML = html;
     document.getElementById('weekRange').textContent = weekRangeLabel(currentMonday);
+    renderDayNotes();
+    renderRating();
+  }
+
+  // ---------- Calificación semanal (estrellas, por semana) ----------
+  function ratingKey(monday){ return 'semestreEnFlor.rating.'+iso(monday); }
+  function renderRating(){
+    var wrap = document.getElementById('ratingStars');
+    if(!wrap) return;
+    var saved = 0;
+    try{ saved = parseInt(localStorage.getItem(ratingKey(currentMonday))||'0',10) || 0; }catch(e){}
+    wrap.innerHTML = '';
+    for(var i=1;i<=5;i++){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'star'+(i<=saved?' on':'');
+      b.dataset.v = i;
+      b.setAttribute('aria-label', i+' de 5 estrellas');
+      b.textContent = '★';
+      wrap.appendChild(b);
+    }
+    wrap.querySelectorAll('.star').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = parseInt(btn.dataset.v,10);
+        var current = 0;
+        try{ current = parseInt(localStorage.getItem(ratingKey(currentMonday))||'0',10) || 0; }catch(e){}
+        var next = (v===current) ? 0 : v; // click de nuevo la última estrella para resetear
+        try{ localStorage.setItem(ratingKey(currentMonday), String(next)); }catch(e){}
+        renderRating();
+      });
+    });
+  }
+
+  // ---------- Urgente / No olvidar / Puede esperar (localStorage, sin fecha) ----------
+  function triageKey(col){ return 'semestreEnFlor.triage.'+col; }
+  function initTriage(){
+    var wrap = document.getElementById('triageBoard');
+    if(!wrap) return;
+    wrap.querySelectorAll('textarea').forEach(function(ta){
+      try{ ta.value = localStorage.getItem(triageKey(ta.dataset.col))||''; }catch(e){}
+      var timer = null;
+      ta.addEventListener('input', function(){
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+          try{ localStorage.setItem(triageKey(ta.dataset.col), ta.value); }catch(e){}
+        }, 450);
+      });
+    });
+  }
+
+  // ---------- Notas del día (localStorage, por fecha) ----------
+  function noteKey(dateStr){ return 'semestreEnFlor.note.'+dateStr; }
+  function loadNote(dateStr){ try{ return localStorage.getItem(noteKey(dateStr))||''; }catch(e){ return ''; } }
+  function saveNote(dateStr, text){ try{ localStorage.setItem(noteKey(dateStr), text); }catch(e){} }
+
+  function renderDayNotes(){
+    var wrap = document.getElementById('notesWeek');
+    if(!wrap) return;
+    wrap.innerHTML = '';
+    var todayStr = iso(new Date());
+    var dayNamesFull = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    for(var i=0;i<7;i++){
+      var d = addDays(currentMonday,i);
+      var ds = iso(d);
+      var div = document.createElement('div');
+      div.className = 'notes-day'+(ds===todayStr?' today':'');
+      div.innerHTML =
+        '<div class="notes-day-head"><span class="notes-day-name">'+dayNamesFull[i]+'</span>'+
+        '<span class="notes-day-date">'+d.toLocaleDateString('es-AR',{day:'numeric',month:'short'})+'</span>'+
+        '<span class="notes-saved" data-saved>guardado ✓</span></div>'+
+        '<textarea placeholder="¿qué pasó hoy? tareas, ideas, lo que quieras anotar…" data-date="'+ds+'"></textarea>';
+      wrap.appendChild(div);
+    }
+    wrap.querySelectorAll('textarea').forEach(function(ta){
+      ta.value = loadNote(ta.dataset.date);
+      var timer = null;
+      ta.addEventListener('input', function(){
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+          saveNote(ta.dataset.date, ta.value);
+          var savedEl = ta.closest('.notes-day').querySelector('[data-saved]');
+          savedEl.classList.add('show');
+          setTimeout(function(){ savedEl.classList.remove('show'); }, 1200);
+        }, 450);
+      });
+    });
   }
 
   function renderLegend(){
@@ -527,6 +657,7 @@
       renderTimeline();
       renderChecklist();
       initChecklistBehavior();
+      initTriage();
       initTabs();
       initWeekNav();
       initReveal();
